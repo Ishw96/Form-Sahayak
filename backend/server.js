@@ -37,7 +37,33 @@ function hashBuffer(text) {
     return crypto.createHash('sha256').update(text).digest('hex');
 }
 
-// ──────────────────── SHARE CHAT PERSISTENCE ────────────────────
+// ──────────────────── DATABASE SETUP ────────────────────
+let mongoose;
+let SharedChat;
+let useMongo = false;
+
+if (process.env.MONGODB_URI) {
+    mongoose = require('mongoose');
+    mongoose.connect(process.env.MONGODB_URI)
+        .then(() => {
+            console.log('Connected to MongoDB Cloud');
+            useMongo = true;
+        })
+        .catch(err => console.error('MongoDB connection error:', err));
+
+    const shareSchema = new mongoose.Schema({
+        shareId: { type: String, unique: true },
+        chatId: String,
+        messages: Array,
+        createdAt: Number,
+        expiresAt: Number
+    });
+    // Auto-delete documents after they expire
+    shareSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+    SharedChat = mongoose.model('SharedChat', shareSchema);
+}
+
+// ──────────────────── SHARE CHAT PERSISTENCE (Fallback) ────────────────────
 const SHARE_FILE = path.join(__dirname, 'data/shares.json');
 
 function loadShares() {
@@ -59,37 +85,54 @@ const shareLimiter = rateLimit({
     legacyHeaders: false
 });
 
-app.post('/api/share', shareLimiter, (req, res) => {
+app.post('/api/share', shareLimiter, async (req, res) => {
   const { chatId, messages } = req.body;
   if (!chatId || !messages) return res.status(400).json({ error: 'Missing data' });
 
   const shareId = crypto.randomBytes(8).toString('hex'); // 16-char hex for better collision resistance
+  const createdAt = Date.now();
+  const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days
   
-  sharedChats[shareId] = {
-    chatId,
-    messages,
-    createdAt: Date.now(),
-    expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000 // 7 days
-  };
-  
-  saveShares(sharedChats);
+  if (useMongo) {
+      try {
+          await new SharedChat({ shareId, chatId, messages, createdAt, expiresAt }).save();
+      } catch (err) {
+          console.error('Mongo save error:', err);
+          return res.status(500).json({ error: 'Database error' });
+      }
+  } else {
+      sharedChats[shareId] = { chatId, messages, createdAt, expiresAt };
+      saveShares(sharedChats);
+  }
 
   res.json({
     shareUrl: `${req.protocol}://${req.get('host')}/s/${shareId}`
   });
 });
 
-app.get('/api/share/:shareId', (req, res) => {
-  const data = sharedChats[req.params.shareId];
-  if (!data || Date.now() > data.expiresAt) {
+async function getShareData(shareId) {
+    if (useMongo) {
+        try {
+            const data = await SharedChat.findOne({ shareId });
+            return data && Date.now() < data.expiresAt ? data : null;
+        } catch(e) { return null; }
+    } else {
+        const data = sharedChats[shareId];
+        return data && Date.now() < data.expiresAt ? data : null;
+    }
+}
+
+app.get('/api/share/:shareId', async (req, res) => {
+  const data = await getShareData(req.params.shareId);
+  if (!data) {
     return res.status(404).json({ error: 'Link expire ho gaya ya exist nahi karta.' });
   }
   res.json(data);
 });
 
-app.get('/s/:shareId', (req, res) => {
-  const data = sharedChats[req.params.shareId];
-  if (!data || Date.now() > data.expiresAt) {
+app.get('/s/:shareId', async (req, res) => {
+  const data = await getShareData(req.params.shareId);
+  if (!data) {
     return res.status(404).send('Link expire ho gaya ya exist nahi karta.');
   }
   res.sendFile(path.join(__dirname, '../share.html'));
