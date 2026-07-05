@@ -77,4 +77,8 @@ Modern browsers strictly enforce **Secure Contexts (HTTPS)** for microphone acce
 
 ## 🛡️ Privacy
 
-Form Sahayak is built with privacy in mind. When users share their chat history to seek help from others, original uploaded form images are stripped from the payload to prevent accidental exposure of sensitive documents.
+Form Sahayak is built with strict privacy-first principles to protect users' sensitive data (like PAN, Aadhaar, etc.):
+
+- **No Permanent Storage:** 🔒 Uploaded form images are processed in real-time by the AI and are **never** stored permanently on our servers.
+- **7-Day Auto Expiry:** Any chat session data that is saved (for sharing purposes) is automatically set to expire and delete after **7 days**.
+- **Secure Sharing:** When users share their chat history to seek help from others, original uploaded form images are strictly stripped from the payload to prevent accidental exposure of sensitive documents.
