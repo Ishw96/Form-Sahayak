@@ -1,0 +1,219 @@
+/* ============================================================
+   FORM SAHAYAK — Responsive Styles (Chat UI)
+   ============================================================ */
+
+/* ── Desktop (default) ───────────────────────────────────── */
+/* Sidebar always visible, main area takes remaining space */
+
+/* ── Tablet (< 1024px) ───────────────────────────────────── */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 260px;
+  }
+
+  .message-bubble {
+    max-width: 90%;
+  }
+}
+
+/* ── Mobile (< 768px) ────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Sidebar becomes a slide-over drawer */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    z-index: var(--z-overlay);
+    box-shadow: var(--shadow-xl);
+    transition: transform 0.3s var(--ease-out-expo);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .icon-btn.sidebar-close-btn {
+    display: flex;
+  }
+
+  .sidebar-overlay.visible {
+    display: block;
+  }
+
+  /* Show the hamburger menu button */
+  .icon-btn.topbar-menu-btn {
+    display: flex;
+  }
+
+  /* Main area takes full width */
+  .main-area {
+    width: 100%;
+  }
+
+  /* Chat messages */
+  .chat-messages {
+    padding: var(--space-md) var(--space-md);
+  }
+
+  .message-bubble {
+    max-width: 92%;
+    padding: var(--space-md) var(--space-lg);
+  }
+
+  /* Message actions touch-friendly */
+  .msg-action-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  /* Lightbox mobile */
+  .lightbox-content img {
+    max-width: 96vw;
+    max-height: 80vh;
+    border-radius: var(--radius-md);
+  }
+  .lightbox-nav-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 18px;
+  }
+  .lightbox-nav-btn.prev { left: 8px; }
+  .lightbox-nav-btn.next { right: 8px; }
+  .lightbox-close-btn { top: 10px; right: 10px; }
+
+  /* Greeting */
+  .chat-greeting {
+    padding: var(--space-xl) var(--space-md);
+  }
+
+  .greeting-title {
+    font-size: var(--text-2xl);
+  }
+
+  .greeting-subtitle {
+    font-size: var(--text-md);
+  }
+
+  .suggestion-chips {
+    gap: var(--space-xs);
+  }
+
+  .suggestion-chip {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-xs);
+  }
+
+  /* Input area */
+  .chat-input-area {
+    padding: var(--space-sm) var(--space-md);
+    padding-bottom: max(var(--space-sm), env(safe-area-inset-bottom));
+  }
+
+  .chat-input-container {
+    border-radius: var(--radius-lg);
+  }
+
+  .compact-lang-select {
+    max-width: 60px;
+    font-size: 10px;
+  }
+
+  /* Settings modal */
+  .settings-modal {
+    width: 95%;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+
+  /* Toast */
+  .toast-container {
+    right: var(--space-md);
+    left: var(--space-md);
+    top: var(--space-md);
+  }
+
+  .toast {
+    max-width: 100%;
+  }
+}
+
+/* ── Small Mobile (< 480px) ──────────────────────────────── */
+@media (max-width: 480px) {
+  .greeting-title {
+    font-size: var(--text-xl);
+  }
+
+  .greeting-desc {
+    font-size: var(--text-sm);
+  }
+
+  .message-bubble {
+    max-width: 95%;
+    font-size: var(--text-sm);
+  }
+
+  .msg-thumb-wrapper {
+    width: 64px;
+    height: 64px;
+  }
+
+  .topbar-chat-title {
+    font-size: var(--text-sm);
+  }
+
+  .voice-btn {
+    /* Previously display: none; but now we want to keep it visible on mobile */
+  }
+}
+
+/* ── Safe area (notch phones) ────────────────────────────── */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .chat-input-area {
+    padding-bottom: max(var(--space-md), env(safe-area-inset-bottom));
+  }
+}
+
+/* ── Hover media query — touch devices ───────────────────── */
+@media (hover: none) {
+  .chat-list-item .chat-item-delete {
+    opacity: 1;
+  }
+
+  .suggestion-chip:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* ── Prefers reduced motion ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Landscape mobile ────────────────────────────────────── */
+@media (max-height: 500px) and (orientation: landscape) {
+  .chat-greeting {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .greeting-logo {
+    width: 48px;
+    height: 48px;
+    margin-bottom: var(--space-md);
+  }
+
+  .greeting-title {
+    font-size: var(--text-lg);
+  }
+
+  .suggestion-chips {
+    margin-top: var(--space-sm);
+  }
+}

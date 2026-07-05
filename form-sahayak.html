@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>फॉर्म सहायक</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rozha+One&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+:root{
+  --paper:#F2ECDC;
+  --card:#FBF8F0;
+  --ink:#22293A;
+  --ink-soft:#52596B;
+  --stamp:#B23A2F;
+  --stamp-dim:#B23A2F55;
+  --rule:#CBBF9C;
+  --success:#3F6B4A;
+  --radius:14px;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 27px, var(--rule) 28px),
+    none;
+  background-blend-mode: normal;
+  color:var(--ink);
+  font-family:'Noto Sans Devanagari','Noto Sans',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.app{
+  max-width:760px;
+  margin:0 auto;
+  padding:28px 18px 60px;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+}
+
+/* ---------- Masthead ---------- */
+.masthead{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin-bottom:28px;
+}
+.stamp-badge{
+  flex:0 0 auto;
+  width:76px;height:76px;
+  border-radius:50%;
+  border:3px solid var(--stamp);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transform:rotate(-8deg);
+  position:relative;
+  color:var(--stamp);
+  box-shadow: inset 0 0 0 2px var(--stamp-dim);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(178,58,47,0.05), transparent 60%);
+}
+.stamp-badge::before{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border:1px solid var(--stamp);
+  border-radius:50%;
+  opacity:0.55;
+}
+.stamp-badge svg{ width:42px; height:42px; }
+.title-block h1{
+  font-family:'Rozha One', serif;
+  font-size:2rem;
+  margin:0 0 4px;
+  letter-spacing:0.5px;
+  color:var(--ink);
+}
+.tagline{
+  margin:0;
+  color:var(--ink-soft);
+  font-size:0.95rem;
+  line-height:1.5;
+}
+.tagline .muted{display:block; font-size:0.85rem; opacity:0.85;}
+
+/* ---------- Upload ---------- */
+.upload-section{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:22px;
+  box-shadow:0 1px 0 var(--rule), 0 8px 24px -16px rgba(0,0,0,0.25);
+}
+.dropzone{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  text-align:center;
+  border:2px dashed var(--rule);
+  border-radius:10px;
+  padding:34px 18px;
+  cursor:pointer;
+  transition:border-color .15s, background .15s;
+}
+.dropzone:hover, .dropzone:focus-within, .dropzone.dragover{
+  border-color:var(--stamp);
+  background:rgba(178,58,47,0.04);
+}
+.dropzone-icon{ font-size:2rem; line-height:1; }
+.dropzone-text{ margin:0; font-size:1rem; }
+.dropzone-text .muted{ display:block; color:var(--ink-soft); font-size:0.85rem; margin-top:4px; }
+
+.thumb-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:16px;
+}
+.thumb{
+  position:relative;
+  width:72px;height:72px;
+  border-radius:8px;
+  overflow:hidden;
+  border:1px solid var(--rule);
+}
+.thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+.thumb button{
+  position:absolute;
+  top:2px; right:2px;
+  width:20px; height:20px;
+  border-radius:50%;
+  border:none;
+  background:rgba(34,41,58,0.75);
+  color:#fff;
+  font-size:0.75rem;
+  line-height:1;
+  cursor:pointer;
+}
+.thumb button:focus-visible{ outline:2px solid var(--stamp); }
+
+.btn-primary, .btn-secondary{
+  font-family:inherit;
+  font-size:1rem;
+  font-weight:600;
+  padding:13px 22px;
+  border-radius:9px;
+  cursor:pointer;
+  border:none;
+  margin-top:18px;
+  width:100%;
+}
+.btn-primary{
+  background:var(--stamp);
+  color:#fff;
+}
+.btn-primary:disabled{
+  background:#cdb9b4;
+  cursor:not-allowed;
+}
+.btn-primary:not(:disabled):hover{ background:#9a2f25; }
+.btn-secondary{
+  background:transparent;
+  border:1.5px solid var(--ink);
+  color:var(--ink);
+}
+.btn-secondary:hover{ background:rgba(34,41,58,0.06); }
+.btn-primary:focus-visible, .btn-secondary:focus-visible{
+  outline:2px solid var(--stamp); outline-offset:2px;
+}
+
+/* ---------- Loading ---------- */
+.loading-section{
+  text-align:center;
+  padding:50px 10px;
+}
+.stamping-anim{
+  width:90px; height:90px;
+  margin:0 auto 18px;
+  border-radius:50%;
+  border:4px solid var(--rule);
+  border-top-color:var(--stamp);
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+#loadingText{ color:var(--ink-soft); font-size:0.95rem; min-height:1.4em; }
+
+/* ---------- Results ---------- */
+.result-section{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:26px 22px 30px;
+  box-shadow:0 1px 0 var(--rule), 0 8px 24px -16px rgba(0,0,0,0.25);
+  animation:stampIn .35s ease-out;
+}
+@keyframes stampIn{
+  from{ opacity:0; transform:scale(0.96); }
+  to{ opacity:1; transform:scale(1); }
+}
+.result-header{ margin-bottom:18px; }
+.stamp-mini{
+  display:inline-block;
+  font-family:'JetBrains Mono', monospace;
+  font-size:0.72rem;
+  font-weight:600;
+  letter-spacing:0.06em;
+  color:var(--success);
+  border:1.5px solid var(--success);
+  border-radius:6px;
+  padding:3px 8px;
+  transform:rotate(-3deg);
+  margin-bottom:10px;
+}
+#formName{
+  font-family:'Rozha One', serif;
+  font-size:1.5rem;
+  margin:4px 0 8px;
+}
+#formPurpose{
+  color:var(--ink-soft);
+  margin:0;
+  line-height:1.55;
+}
+
+.docs-needed{
+  margin:18px 0;
+  padding:14px 16px;
+  background:rgba(178,58,47,0.06);
+  border-left:3px solid var(--stamp);
+  border-radius:6px;
+}
+.docs-needed h3{
+  margin:0 0 6px;
+  font-size:0.95rem;
+  color:var(--stamp);
+}
+.docs-needed ul{ margin:0; padding-left:20px; }
+.docs-needed li{ margin-bottom:3px; }
+
+.fields-list{
+  list-style:none;
+  margin:20px 0 0;
+  padding:0;
+}
+.field-row{
+  display:grid;
+  grid-template-columns:34px 1fr;
+  gap:6px 14px;
+  padding:16px 0;
+  border-top:1px dashed var(--rule);
+}
+.field-row:first-child{ border-top:none; }
+.field-num{
+  font-family:'JetBrains Mono', monospace;
+  color:var(--stamp);
+  font-weight:600;
+  font-size:0.95rem;
+  padding-top:2px;
+}
+.field-label{
+  font-weight:700;
+  font-size:1.02rem;
+  grid-column:2;
+}
+.field-explain{
+  grid-column:2;
+  color:var(--ink-soft);
+  line-height:1.55;
+  margin-top:2px;
+}
+.field-example-row{
+  grid-column:2;
+  margin-top:8px;
+}
+.example-caption{
+  font-size:0.72rem;
+  color:var(--ink-soft);
+  letter-spacing:0.04em;
+  margin-bottom:5px;
+  text-transform:uppercase;
+}
+.box-grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:3px;
+}
+.box-cell{
+  width:24px; height:28px;
+  border:1.3px solid var(--rule);
+  border-radius:3px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'JetBrains Mono', monospace;
+  font-weight:600;
+  font-size:0.85rem;
+  color:var(--ink);
+  background:#fff;
+}
+.box-cell.space{ border-color:transparent; background:transparent; width:10px; }
+
+.tips-block{
+  margin-top:22px;
+  padding:14px 16px;
+  background:rgba(63,107,74,0.07);
+  border-left:3px solid var(--success);
+  border-radius:6px;
+  line-height:1.55;
+}
+.tips-block h3{ margin:0 0 6px; font-size:0.95rem; color:var(--success); }
+
+/* ---------- Error ---------- */
+.error-section{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:24px;
+  text-align:center;
+  border:1.5px solid var(--stamp-dim);
+}
+#errorText{ color:var(--stamp); margin-bottom:14px; }
+
+.hidden{ display:none !important; }
+
+footer{
+  margin-top:26px;
+  text-align:center;
+}
+.disclaimer{
+  font-size:0.8rem;
+  color:var(--ink-soft);
+  line-height:1.5;
+  max-width:520px;
+  margin:0 auto;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="masthead">
+    <div class="stamp-badge" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="title-block">
+      <h1>फॉर्म सहायक</h1>
+      <p class="tagline">कोई भी बैंक का फॉर्म डालिए — हम हर field आसान भाषा में समझाएँगे।
+        <span class="muted">KYC, FATCA, insurance, pension — कोई भी फॉर्म चलेगा।</span>
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <section id="uploadSection" class="upload-section">
+      <label for="fileInput" class="dropzone" id="dropzone">
+        <div class="dropzone-icon" aria-hidden="true">📄</div>
+        <p class="dropzone-text">फॉर्म की फोटो यहाँ डालें
+          <span class="muted">या क्लिक करके चुनें — एक से ज़्यादा पेज भी डाल सकते हैं</span>
+        </p>
+      </label>
+      <input type="file" id="fileInput" accept="image/*" multiple hidden />
+      <div id="thumbStrip" class="thumb-strip"></div>
+      <button id="analyzeBtn" class="btn-primary" disabled>इस फॉर्म को समझाओ</button>
+    </section>
+
+    <section id="loadingSection" class="loading-section hidden">
+      <div class="stamping-anim" aria-hidden="true"></div>
+      <p id="loadingText">फॉर्म को ध्यान से पढ़ रहे हैं...</p>
+    </section>
+
+    <section id="resultSection" class="result-section hidden">
+      <div class="result-header">
+        <span class="stamp-mini">समझ गए ✓</span>
+        <h2 id="formName"></h2>
+        <p id="formPurpose"></p>
+      </div>
+      <div id="docsNeeded" class="docs-needed hidden">
+        <h3>ज़रूरी दस्तावेज़</h3>
+        <ul id="docsList"></ul>
+      </div>
+      <ol id="fieldsList" class="fields-list"></ol>
+      <div id="tipsBlock" class="tips-block hidden">
+        <h3>ध्यान रखें</h3>
+        <p id="tipsText"></p>
+      </div>
+      <button id="resetBtn" class="btn-secondary">नया फॉर्म डालें</button>
+    </section>
+
+    <section id="errorSection" class="error-section hidden">
+      <p id="errorText"></p>
+      <button id="retryBtn" class="btn-secondary">फिर कोशिश करें</button>
+    </section>
+  </main>
+
+  <footer>
+    <p class="disclaimer">ध्यान दें: यह सिर्फ समझने में मदद के लिए है। फॉर्म जमा करने से पहले एक बार बैंक स्टाफ से ज़रूर confirm कर लें, खास तौर पर PAN, Aadhaar और हस्ताक्षर वाले हिस्सों के लिए।</p>
+  </footer>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const thumbStrip = document.getElementById('thumbStrip');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const uploadSection = document.getElementById('uploadSection');
+const loadingSection = document.getElementById('loadingSection');
+const resultSection = document.getElementById('resultSection');
+const errorSection = document.getElementById('errorSection');
+const loadingText = document.getElementById('loadingText');
+const retryBtn = document.getElementById('retryBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let images = []; // {dataUrl, mediaType, base64}
+
+const loadingMessages = [
+  "फॉर्म को ध्यान से पढ़ रहे हैं...",
+  "हर field को समझ रहे हैं...",
+  "आसान भाषा में लिख रहे हैं...",
+  "बस थोड़ी देर और..."
+];
+let loadingInterval = null;
+
+function show(el){ el.classList.remove('hidden'); }
+function hide(el){ el.classList.add('hidden'); }
+
+fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+['dragover','dragenter'].forEach(evt=>{
+  dropzone.addEventListener(evt, (e)=>{ e.preventDefault(); dropzone.classList.add('dragover'); });
+});
+['dragleave','drop'].forEach(evt=>{
+  dropzone.addEventListener(evt, (e)=>{ e.preventDefault(); dropzone.classList.remove('dragover'); });
+});
+dropzone.addEventListener('drop', (e)=>{
+  if(e.dataTransfer.files && e.dataTransfer.files.length){
+    handleFiles(e.dataTransfer.files);
+  }
+});
+
+function handleFiles(fileList){
+  const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+  let pending = files.length;
+  if(!pending) return;
+  files.forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result;
+      const base64 = dataUrl.split(',')[1];
+      images.push({ dataUrl, mediaType: file.type, base64 });
+      renderThumbs();
+    };
+    reader.readAsDataURL(file);
+  });
+  fileInput.value = '';
+}
+
+function renderThumbs(){
+  thumbStrip.innerHTML = '';
+  images.forEach((img, idx)=>{
+    const div = document.createElement('div');
+    div.className = 'thumb';
+    const image = document.createElement('img');
+    image.src = img.dataUrl;
+    image.alt = 'फॉर्म पेज ' + (idx+1);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'यह पेज हटाएँ');
+    btn.textContent = '✕';
+    btn.onclick = () => { images.splice(idx,1); renderThumbs(); };
+    div.appendChild(image);
+    div.appendChild(btn);
+    thumbStrip.appendChild(div);
+  });
+  analyzeBtn.disabled = images.length === 0;
+}
+
+analyzeBtn.addEventListener('click', analyzeForm);
+retryBtn.addEventListener('click', () => { hide(errorSection); analyzeForm(); });
+resetBtn.addEventListener('click', resetAll);
+
+function resetAll(){
+  images = [];
+  renderThumbs();
+  hide(resultSection);
+  hide(errorSection);
+  show(uploadSection);
+}
+
+function startLoadingMessages(){
+  let i = 0;
+  loadingText.textContent = loadingMessages[0];
+  loadingInterval = setInterval(()=>{
+    i = (i+1) % loadingMessages.length;
+    loadingText.textContent = loadingMessages[i];
+  }, 1800);
+}
+function stopLoadingMessages(){
+  clearInterval(loadingInterval);
+}
+
+async function analyzeForm(){
+  hide(uploadSection);
+  hide(resultSection);
+  hide(errorSection);
+  show(loadingSection);
+  startLoadingMessages();
+
+  const promptText = `Is bank form ki image(s) ko dhyan se padho. Yeh kisi Indian bank ya sarkari yojna ka form ho sakta hai. Mujhe sirf neeche diye JSON format mein jawab do, kuch aur text, markdown ya code-fence mat lagana:
+
+{
+  "form_name": "form ka naam, jaise form ke top par likha hai",
+  "purpose": "1-2 line mein, simple Hinglish mein, ye form kis kaam ke liye hai",
+  "fields": [
+    {
+      "label": "form mein jo field ka naam likha hai, jaise wahi likha hai",
+      "explanation": "is field mein kya bharna hai, bahut simple Hinglish mein, 1-2 chhoti lines",
+      "example": "ek chhota sample value jo us blank mein likha ja sakta hai, agar field number/text type ho. Agar example zaroori nahi (jaise signature, photo, ya tick-box), to khali string de do."
+    }
+  ],
+  "documents_needed": ["form ke saath jo documents lagte hain, agar form mein ya general knowledge se pata chal raha ho"],
+  "tips": "1-3 chhote tips, simple Hinglish mein - jaise kaunsa column khali chhod sakte hain, kahan sign karna hai, ya kya dhyan rakhna hai"
+}
+
+Sabhi fields cover karo jo form mein dikh rahe hain, wahi order rakho jo form mein hai. Agar kisi field ka matlab poori tarah clear nahi hai to apna best samajh do, lekin explanation simple aur short rakhna. Sirf valid JSON return karna hai.`;
+
+  const content = images.map(img => ({
+    type: "image",
+    source: { type: "base64", media_type: img.mediaType, data: img.base64 }
+  }));
+  content.push({ type: "text", text: promptText });
+
+  try{
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [
+          { role: "user", content: content }
+        ]
+      })
+    });
+
+    if(!response.ok){
+      throw new Error("API se jawab nahi mila (status " + response.status + ")");
+    }
+
+    const data = await response.json();
+    const textParts = (data.content || [])
+      .map(item => item.type === "text" ? item.text : "")
+      .filter(Boolean)
+      .join("\n");
+
+    const cleaned = textParts.replace(/```json|```/g, "").trim();
+    const parsed = JSON.parse(cleaned);
+
+    renderResult(parsed);
+    stopLoadingMessages();
+    hide(loadingSection);
+    show(resultSection);
+
+  }catch(err){
+    console.error("Form Sahayak error:", err);
+    stopLoadingMessages();
+    hide(loadingSection);
+    document.getElementById('errorText').textContent =
+      "Kuch gadbad ho gayi — form samajhne mein dikkat aayi. Photo clear hai ya nahi, ek baar check karke phir try karein.";
+    show(errorSection);
+  }
+}
+
+function renderResult(parsed){
+  document.getElementById('formName').textContent = parsed.form_name || "फॉर्म";
+  document.getElementById('formPurpose').textContent = parsed.purpose || "";
+
+  const docsNeeded = document.getElementById('docsNeeded');
+  const docsList = document.getElementById('docsList');
+  docsList.innerHTML = '';
+  if(parsed.documents_needed && parsed.documents_needed.length){
+    parsed.documents_needed.forEach(d=>{
+      const li = document.createElement('li');
+      li.textContent = d;
+      docsList.appendChild(li);
+    });
+    show(docsNeeded);
+  } else {
+    hide(docsNeeded);
+  }
+
+  const fieldsList = document.getElementById('fieldsList');
+  fieldsList.innerHTML = '';
+  (parsed.fields || []).forEach((f, idx)=>{
+    const li = document.createElement('li');
+    li.className = 'field-row';
+
+    const num = document.createElement('span');
+    num.className = 'field-num';
+    num.textContent = String(idx+1).padStart(2,'0');
+
+    const label = document.createElement('span');
+    label.className = 'field-label';
+    label.textContent = f.label || '';
+
+    const explain = document.createElement('span');
+    explain.className = 'field-explain';
+    explain.textContent = f.explanation || '';
+
+    li.appendChild(num);
+    li.appendChild(label);
+    li.appendChild(explain);
+
+    if(f.example && f.example.trim().length){
+      const exampleRow = document.createElement('div');
+      exampleRow.className = 'field-example-row';
+
+      const caption = document.createElement('div');
+      caption.className = 'example-caption';
+      caption.textContent = 'उदाहरण';
+
+      const grid = document.createElement('div');
+      grid.className = 'box-grid';
+      f.example.trim().split('').forEach(ch=>{
+        const cell = document.createElement('span');
+        if(ch === ' '){
+          cell.className = 'box-cell space';
+        } else {
+          cell.className = 'box-cell';
+          cell.textContent = ch.toUpperCase();
+        }
+        grid.appendChild(cell);
+      });
+
+      exampleRow.appendChild(caption);
+      exampleRow.appendChild(grid);
+      li.appendChild(exampleRow);
+    }
+
+    fieldsList.appendChild(li);
+  });
+
+  const tipsBlock = document.getElementById('tipsBlock');
+  const tipsText = document.getElementById('tipsText');
+  if(parsed.tips && parsed.tips.trim().length){
+    tipsText.textContent = parsed.tips;
+    show(tipsBlock);
+  } else {
+    hide(tipsBlock);
+  }
+}
+</script>
+</body>
+</html>
